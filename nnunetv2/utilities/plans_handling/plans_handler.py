@@ -113,6 +113,10 @@ class ConfigurationManager(object):
     def pool_op_kernel_sizes(self) -> List[List[int]]:
         return self.configuration['pool_op_kernel_sizes']
 
+    @pool_op_kernel_sizes.setter
+    def pool_op_kernel_sizes(self, value):
+        self.configuration['pool_op_kernel_sizes'] = value
+
     @property
     def conv_kernel_sizes(self) -> List[List[int]]:
         return self.configuration['conv_kernel_sizes']
