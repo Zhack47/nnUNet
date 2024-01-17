@@ -1,4 +1,5 @@
 import torch
+from nnunetv2.training.lr_scheduler.polylr import PolyLRScheduler
 from torch import nn
 from nnunetv2.training.nnUNetTrainer.nnUNetTrainer import nnUNetTrainer
 from torch.nn import functional as F
@@ -638,7 +639,7 @@ class nnUNetTrainer_Optim_and_LR(nnUNetTrainer):
                                            weight_decay=self.weight_decay,
                                            eps=1e-4  # 1e-8 might cause nans in fp16
                                            )
-        lr_scheduler = None
+        lr_scheduler = PolyLRScheduler(optimizer, self.initial_lr, self.num_epochs)
         return optimizer, lr_scheduler
 
 
