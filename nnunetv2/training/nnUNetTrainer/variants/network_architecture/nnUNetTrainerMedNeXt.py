@@ -1,4 +1,6 @@
 import torch
+from nnunetv2.utilities.plans_handling.plans_handler import ConfigurationManager, PlansManager
+
 from nnunetv2.training.lr_scheduler.polylr import PolyLRScheduler
 from torch import nn
 from nnunetv2.training.nnUNetTrainer.nnUNetTrainer import nnUNetTrainer
@@ -645,8 +647,12 @@ class nnUNetTrainer_Optim_and_LR(nnUNetTrainer):
 
 class nnUNetTrainer_MedNeXt_S_kernel3(nnUNetTrainer_Optim_and_LR):
 
-    def initialize_network(self):
-        self.network = MedNeXt(
+    def build_network_architecture(self, plans_manager: PlansManager,
+                                   dataset_json,
+                                   configuration_manager: ConfigurationManager,
+                                   num_input_channels,
+                                   enable_deep_supervision: bool = True) -> nn.Module:
+        network = MedNeXt(
             in_channels=self.num_input_channels,
             n_channels=32,
             n_classes=self.label_manager.num_segmentation_heads,
@@ -657,15 +663,14 @@ class nnUNetTrainer_MedNeXt_S_kernel3(nnUNetTrainer_Optim_and_LR):
             do_res_up_down=True,
             block_counts=[2, 2, 2, 2, 2, 2, 2, 2, 2]
         )
+        return network
 
-        if torch.cuda.is_available():
-            self.network.cuda()
 
 
 class nnUNetTrainer_MedNeXt_B_kernel3(nnUNetTrainer_Optim_and_LR):
 
-    def initialize_network(self):
-        self.network = MedNeXt(
+    def build_network_architecture(self):
+        network = MedNeXt(
             in_channels=self.num_input_channels,
             n_channels=32,
             n_classes=self.label_manager.num_segmentation_heads,
@@ -676,15 +681,13 @@ class nnUNetTrainer_MedNeXt_B_kernel3(nnUNetTrainer_Optim_and_LR):
             do_res_up_down=True,
             block_counts=[2, 2, 2, 2, 2, 2, 2, 2, 2]
         )
-
-        if torch.cuda.is_available():
-            self.network.cuda()
+        return network
 
 
 class nnUNetTrainer_MedNeXt_M_kernel3(nnUNetTrainer_Optim_and_LR):
 
-    def initialize_network(self):
-        self.network = MedNeXt(
+    def build_network_architecture(self):
+        network = MedNeXt(
             in_channels=self.num_input_channels,
             n_channels=32,
             n_classes=self.label_manager.num_segmentation_heads,
@@ -696,15 +699,13 @@ class nnUNetTrainer_MedNeXt_M_kernel3(nnUNetTrainer_Optim_and_LR):
             block_counts=[3, 4, 4, 4, 4, 4, 4, 4, 3],
             checkpoint_style='outside_block'
         )
-
-        if torch.cuda.is_available():
-            self.network.cuda()
+        return network
 
 
 class nnUNetTrainer_MedNeXt_L_kernel3(nnUNetTrainer_Optim_and_LR):
 
-    def initialize_network(self):
-        self.network = MedNeXt(
+    def build_network_architecture(self):
+        network = MedNeXt(
             in_channels=self.num_input_channels,
             n_channels=32,
             n_classes=self.label_manager.num_segmentation_heads,
@@ -718,16 +719,14 @@ class nnUNetTrainer_MedNeXt_L_kernel3(nnUNetTrainer_Optim_and_LR):
             block_counts=[3, 4, 8, 8, 8, 8, 8, 4, 3],
             checkpoint_style='outside_block'
         )
-
-        if torch.cuda.is_available():
-            self.network.cuda()
+        return network
 
 
 # Kernels of size 5
 class nnUNetTrainer_MedNeXt_S_kernel5(nnUNetTrainer_Optim_and_LR):
 
-    def initialize_network(self):
-        self.network = MedNeXt(
+    def build_network_architecture(self):
+        network = MedNeXt(
             in_channels=self.num_input_channels,
             n_channels=32,
             n_classes=self.label_manager.num_segmentation_heads,
@@ -738,9 +737,7 @@ class nnUNetTrainer_MedNeXt_S_kernel5(nnUNetTrainer_Optim_and_LR):
             do_res_up_down=True,
             block_counts=[2, 2, 2, 2, 2, 2, 2, 2, 2]
         )
-
-        if torch.cuda.is_available():
-            self.network.cuda()
+        return network
 
 
 class nnUNetTrainer_MedNeXt_S_kernel5_lr_1e_4(nnUNetTrainer_MedNeXt_S_kernel5):
@@ -759,8 +756,8 @@ class nnUNetTrainer_MedNeXt_S_kernel5_lr_25e_5(nnUNetTrainer_MedNeXt_S_kernel5):
 
 class nnUNetTrainer_MedNeXt_B_kernel5(nnUNetTrainer_Optim_and_LR):
 
-    def initialize_network(self):
-        self.network = MedNeXt(
+    def build_network_architecture(self):
+        network = MedNeXt(
             in_channels=self.num_input_channels,
             n_channels=32,
             n_classes=self.label_manager.num_segmentation_heads,
@@ -771,9 +768,7 @@ class nnUNetTrainer_MedNeXt_B_kernel5(nnUNetTrainer_Optim_and_LR):
             do_res_up_down=True,
             block_counts=[2, 2, 2, 2, 2, 2, 2, 2, 2]
         )
-
-        if torch.cuda.is_available():
-            self.network.cuda()
+        return network
 
 
 class nnUNetTrainer_MedNeXt_B_kernel5_lr_5e_4(nnUNetTrainer_MedNeXt_B_kernel5):
@@ -799,8 +794,8 @@ class nnUNetTrainer_MedNeXt_B_kernel5_lr_1e_4(nnUNetTrainer_MedNeXt_B_kernel5):
 
 class nnUNetTrainer_MedNeXt_M_kernel5(nnUNetTrainer_Optim_and_LR):
 
-    def initialize_network(self):
-        self.network = MedNeXt(
+    def build_network_architecture(self):
+        network = MedNeXt(
             in_channels=self.num_input_channels,
             n_channels=32,
             n_classes=self.label_manager.num_segmentation_heads,
@@ -812,9 +807,7 @@ class nnUNetTrainer_MedNeXt_M_kernel5(nnUNetTrainer_Optim_and_LR):
             block_counts=[3, 4, 4, 4, 4, 4, 4, 4, 3],
             checkpoint_style='outside_block'
         )
-
-        if torch.cuda.is_available():
-            self.network.cuda()
+        return network
 
 
 class nnUNetTrainer_MedNeXt_M_kernel5_lr_5e_4(nnUNetTrainer_MedNeXt_M_kernel5):
@@ -840,8 +833,8 @@ class nnUNetTrainer_MedNeXt_M_kernel5_lr_1e_4(nnUNetTrainer_MedNeXt_M_kernel5):
 
 class nnUNetTrainer_MedNeXt_L_kernel5(nnUNetTrainer_Optim_and_LR):
 
-    def initialize_network(self):
-        self.network = MedNeXt(
+    def build_network_architecture(self):
+        network = MedNeXt(
             in_channels=self.num_input_channels,
             n_channels=32,
             n_classes=self.label_manager.num_segmentation_heads,
@@ -854,9 +847,7 @@ class nnUNetTrainer_MedNeXt_L_kernel5(nnUNetTrainer_Optim_and_LR):
             block_counts=[3, 4, 8, 8, 8, 8, 8, 4, 3],
             checkpoint_style='outside_block'
         )
-
-        if torch.cuda.is_available():
-            self.network.cuda()
+        return network
 
 
 class nnUNetTrainer_MedNeXt_L_kernel5_lr_5e_4(nnUNetTrainer_MedNeXt_L_kernel5):
