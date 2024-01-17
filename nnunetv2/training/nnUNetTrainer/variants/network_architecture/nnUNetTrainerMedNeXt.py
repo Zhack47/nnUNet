@@ -6,6 +6,7 @@ from torch import nn
 from nnunetv2.training.nnUNetTrainer.nnUNetTrainer import nnUNetTrainer
 from torch.nn import functional as F
 import torch.utils.checkpoint as checkpoint
+from torch._dynamo import OptimizedModule
 
 
 class MedNeXtBlock(nn.Module):
@@ -634,6 +635,19 @@ class nnUNetTrainer_Optim_and_LR(nnUNetTrainer):
         num_of_outputs_in_mednext = 5
         self.configuration_manager.pool_op_kernel_sizes = [[2, 2, 2] for i in range(num_of_outputs_in_mednext + 1)]
 
+    def set_deep_supervision_enabled(self, enabled: bool):
+        """
+        This function is specific for the default architecture in nnU-Net. If you change the architecture, there are
+        chances you need to change this as well!
+        """
+        if self.is_ddp:
+            mod = self.network.module
+        else:
+            mod = self.network
+        if isinstance(mod, OptimizedModule):
+            mod = mod._orig_mod
+
+        mod.deep_supervision = enabled
 
     def configure_optimizers(self):
         optimizer = torch.optim.AdamW(self.network.parameters(),
