@@ -661,7 +661,7 @@ class nnUNetTrainer_MedNeXt_S_kernel3(nnUNetTrainer_Optim_and_LR):
             self.network.cuda()
 
 
-class nnUNetTrainerV2_MedNeXt_B_kernel3(nnUNetTrainer_Optim_and_LR):
+class nnUNetTrainer_MedNeXt_B_kernel3(nnUNetTrainer_Optim_and_LR):
 
     def initialize_network(self):
         self.network = MedNeXt(
