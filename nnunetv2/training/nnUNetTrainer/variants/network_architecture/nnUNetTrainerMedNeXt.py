@@ -669,7 +669,11 @@ class nnUNetTrainer_MedNeXt_S_kernel3(nnUNetTrainer_Optim_and_LR):
 
 class nnUNetTrainer_MedNeXt_B_kernel3(nnUNetTrainer_Optim_and_LR):
 
-    def build_network_architecture(self):
+    def build_network_architecture(self, plans_manager: PlansManager,
+                                   dataset_json,
+                                   configuration_manager: ConfigurationManager,
+                                   num_input_channels,
+                                   enable_deep_supervision: bool = True):
         network = MedNeXt(
             in_channels=self.num_input_channels,
             n_channels=32,
@@ -686,7 +690,11 @@ class nnUNetTrainer_MedNeXt_B_kernel3(nnUNetTrainer_Optim_and_LR):
 
 class nnUNetTrainer_MedNeXt_M_kernel3(nnUNetTrainer_Optim_and_LR):
 
-    def build_network_architecture(self):
+    def build_network_architecture(self, plans_manager: PlansManager,
+                                   dataset_json,
+                                   configuration_manager: ConfigurationManager,
+                                   num_input_channels,
+                                   enable_deep_supervision: bool = True):
         network = MedNeXt(
             in_channels=self.num_input_channels,
             n_channels=32,
@@ -704,7 +712,11 @@ class nnUNetTrainer_MedNeXt_M_kernel3(nnUNetTrainer_Optim_and_LR):
 
 class nnUNetTrainer_MedNeXt_L_kernel3(nnUNetTrainer_Optim_and_LR):
 
-    def build_network_architecture(self):
+    def build_network_architecture(self, plans_manager: PlansManager,
+                                   dataset_json,
+                                   configuration_manager: ConfigurationManager,
+                                   num_input_channels,
+                                   enable_deep_supervision: bool = True):
         network = MedNeXt(
             in_channels=self.num_input_channels,
             n_channels=32,
@@ -725,7 +737,11 @@ class nnUNetTrainer_MedNeXt_L_kernel3(nnUNetTrainer_Optim_and_LR):
 # Kernels of size 5
 class nnUNetTrainer_MedNeXt_S_kernel5(nnUNetTrainer_Optim_and_LR):
 
-    def build_network_architecture(self):
+    def build_network_architecture(self, plans_manager: PlansManager,
+                                   dataset_json,
+                                   configuration_manager: ConfigurationManager,
+                                   num_input_channels,
+                                   enable_deep_supervision: bool = True):
         network = MedNeXt(
             in_channels=self.num_input_channels,
             n_channels=32,
@@ -756,7 +772,11 @@ class nnUNetTrainer_MedNeXt_S_kernel5_lr_25e_5(nnUNetTrainer_MedNeXt_S_kernel5):
 
 class nnUNetTrainer_MedNeXt_B_kernel5(nnUNetTrainer_Optim_and_LR):
 
-    def build_network_architecture(self):
+    def build_network_architecture(self, plans_manager: PlansManager,
+                                   dataset_json,
+                                   configuration_manager: ConfigurationManager,
+                                   num_input_channels,
+                                   enable_deep_supervision: bool = True):
         network = MedNeXt(
             in_channels=self.num_input_channels,
             n_channels=32,
@@ -794,7 +814,11 @@ class nnUNetTrainer_MedNeXt_B_kernel5_lr_1e_4(nnUNetTrainer_MedNeXt_B_kernel5):
 
 class nnUNetTrainer_MedNeXt_M_kernel5(nnUNetTrainer_Optim_and_LR):
 
-    def build_network_architecture(self):
+    def build_network_architecture(self, plans_manager: PlansManager,
+                                   dataset_json,
+                                   configuration_manager: ConfigurationManager,
+                                   num_input_channels,
+                                   enable_deep_supervision: bool = True):
         network = MedNeXt(
             in_channels=self.num_input_channels,
             n_channels=32,
@@ -833,7 +857,11 @@ class nnUNetTrainer_MedNeXt_M_kernel5_lr_1e_4(nnUNetTrainer_MedNeXt_M_kernel5):
 
 class nnUNetTrainer_MedNeXt_L_kernel5(nnUNetTrainer_Optim_and_LR):
 
-    def build_network_architecture(self):
+    def build_network_architecture(self, plans_manager: PlansManager,
+                                   dataset_json,
+                                   configuration_manager: ConfigurationManager,
+                                   num_input_channels,
+                                   enable_deep_supervision: bool = True):
         network = MedNeXt(
             in_channels=self.num_input_channels,
             n_channels=32,
