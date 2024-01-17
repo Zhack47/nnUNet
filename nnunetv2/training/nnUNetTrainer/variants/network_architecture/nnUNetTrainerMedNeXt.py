@@ -617,8 +617,16 @@ class MedNeXt(nn.Module):
 
 class nnUNetTrainer_Optim_and_LR(nnUNetTrainer):
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(
+        self,
+        plans: dict,
+        configuration: str,
+        fold: int,
+        dataset_json: dict,
+        unpack_dataset: bool = True,
+        device: torch.device = torch.device("cuda"),
+    ):
+        super().__init__(plans, configuration, fold, dataset_json, unpack_dataset, device)
         self.initial_lr = 1e-3
         num_of_outputs_in_mednext = 5
         self.configuration_manager.pool_op_kernel_sizes = [[2, 2, 2] for i in range(num_of_outputs_in_mednext + 1)]
@@ -672,7 +680,7 @@ class nnUNetTrainerV2_MedNeXt_B_kernel3(nnUNetTrainer_Optim_and_LR):
             self.network.cuda()
 
 
-class nnUNetTrainerV2_MedNeXt_M_kernel3(nnUNetTrainer_Optim_and_LR):
+class nnUNetTrainer_MedNeXt_M_kernel3(nnUNetTrainer_Optim_and_LR):
 
     def initialize_network(self):
         self.network = MedNeXt(
@@ -692,7 +700,7 @@ class nnUNetTrainerV2_MedNeXt_M_kernel3(nnUNetTrainer_Optim_and_LR):
             self.network.cuda()
 
 
-class nnUNetTrainerV2_MedNeXt_L_kernel3(nnUNetTrainer_Optim_and_LR):
+class nnUNetTrainer_MedNeXt_L_kernel3(nnUNetTrainer_Optim_and_LR):
 
     def initialize_network(self):
         self.network = MedNeXt(
@@ -715,7 +723,7 @@ class nnUNetTrainerV2_MedNeXt_L_kernel3(nnUNetTrainer_Optim_and_LR):
 
 
 # Kernels of size 5
-class nnUNetTrainerV2_MedNeXt_S_kernel5(nnUNetTrainer_Optim_and_LR):
+class nnUNetTrainer_MedNeXt_S_kernel5(nnUNetTrainer_Optim_and_LR):
 
     def initialize_network(self):
         self.network = MedNeXt(
@@ -734,21 +742,21 @@ class nnUNetTrainerV2_MedNeXt_S_kernel5(nnUNetTrainer_Optim_and_LR):
             self.network.cuda()
 
 
-class nnUNetTrainerV2_MedNeXt_S_kernel5_lr_1e_4(nnUNetTrainerV2_MedNeXt_S_kernel5):
+class nnUNetTrainer_MedNeXt_S_kernel5_lr_1e_4(nnUNetTrainer_MedNeXt_S_kernel5):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.initial_lr = 1e-4
 
 
-class nnUNetTrainerV2_MedNeXt_S_kernel5_lr_25e_5(nnUNetTrainerV2_MedNeXt_S_kernel5):
+class nnUNetTrainer_MedNeXt_S_kernel5_lr_25e_5(nnUNetTrainer_MedNeXt_S_kernel5):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.initial_lr = 25e-5
 
 
-class nnUNetTrainerV2_MedNeXt_B_kernel5(nnUNetTrainer_Optim_and_LR):
+class nnUNetTrainer_MedNeXt_B_kernel5(nnUNetTrainer_Optim_and_LR):
 
     def initialize_network(self):
         self.network = MedNeXt(
@@ -767,28 +775,28 @@ class nnUNetTrainerV2_MedNeXt_B_kernel5(nnUNetTrainer_Optim_and_LR):
             self.network.cuda()
 
 
-class nnUNetTrainerV2_MedNeXt_B_kernel5_lr_5e_4(nnUNetTrainerV2_MedNeXt_B_kernel5):
+class nnUNetTrainer_MedNeXt_B_kernel5_lr_5e_4(nnUNetTrainer_MedNeXt_B_kernel5):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.initial_lr = 5e-4
 
 
-class nnUNetTrainerV2_MedNeXt_B_kernel5_lr_25e_5(nnUNetTrainerV2_MedNeXt_B_kernel5):
+class nnUNetTrainer_MedNeXt_B_kernel5_lr_25e_5(nnUNetTrainer_MedNeXt_B_kernel5):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.initial_lr = 25e-5
 
 
-class nnUNetTrainerV2_MedNeXt_B_kernel5_lr_1e_4(nnUNetTrainerV2_MedNeXt_B_kernel5):
+class nnUNetTrainer_MedNeXt_B_kernel5_lr_1e_4(nnUNetTrainer_MedNeXt_B_kernel5):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.initial_lr = 1e-4
 
 
-class nnUNetTrainerV2_MedNeXt_M_kernel5(nnUNetTrainer_Optim_and_LR):
+class nnUNetTrainer_MedNeXt_M_kernel5(nnUNetTrainer_Optim_and_LR):
 
     def initialize_network(self):
         self.network = MedNeXt(
@@ -808,28 +816,28 @@ class nnUNetTrainerV2_MedNeXt_M_kernel5(nnUNetTrainer_Optim_and_LR):
             self.network.cuda()
 
 
-class nnUNetTrainerV2_MedNeXt_M_kernel5_lr_5e_4(nnUNetTrainerV2_MedNeXt_M_kernel5):
+class nnUNetTrainer_MedNeXt_M_kernel5_lr_5e_4(nnUNetTrainer_MedNeXt_M_kernel5):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.initial_lr = 5e-4
 
 
-class nnUNetTrainerV2_MedNeXt_M_kernel5_lr_25e_5(nnUNetTrainerV2_MedNeXt_M_kernel5):
+class nnUNetTrainer_MedNeXt_M_kernel5_lr_25e_5(nnUNetTrainer_MedNeXt_M_kernel5):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.initial_lr = 25e-5
 
 
-class nnUNetTrainerV2_MedNeXt_M_kernel5_lr_1e_4(nnUNetTrainerV2_MedNeXt_M_kernel5):
+class nnUNetTrainer_MedNeXt_M_kernel5_lr_1e_4(nnUNetTrainer_MedNeXt_M_kernel5):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.initial_lr = 1e-4
 
 
-class nnUNetTrainerV2_MedNeXt_L_kernel5(nnUNetTrainer_Optim_and_LR):
+class nnUNetTrainer_MedNeXt_L_kernel5(nnUNetTrainer_Optim_and_LR):
 
     def initialize_network(self):
         self.network = MedNeXt(
@@ -850,21 +858,21 @@ class nnUNetTrainerV2_MedNeXt_L_kernel5(nnUNetTrainer_Optim_and_LR):
             self.network.cuda()
 
 
-class nnUNetTrainerV2_MedNeXt_L_kernel5_lr_5e_4(nnUNetTrainerV2_MedNeXt_L_kernel5):
+class nnUNetTrainer_MedNeXt_L_kernel5_lr_5e_4(nnUNetTrainer_MedNeXt_L_kernel5):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.initial_lr = 5e-4
 
 
-class nnUNetTrainerV2_MedNeXt_L_kernel5_lr_25e_5(nnUNetTrainerV2_MedNeXt_L_kernel5):
+class nnUNetTrainer_MedNeXt_L_kernel5_lr_25e_5(nnUNetTrainer_MedNeXt_L_kernel5):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.initial_lr = 25e-5
 
 
-class nnUNetTrainerV2_MedNeXt_L_kernel5_lr_1e_4(nnUNetTrainerV2_MedNeXt_L_kernel5):
+class nnUNetTrainer_MedNeXt_L_kernel5_lr_1e_4(nnUNetTrainer_MedNeXt_L_kernel5):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
