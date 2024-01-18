@@ -649,14 +649,14 @@ class nnUNetTrainer_Optim_and_LR(nnUNetTrainer):
 
         mod.deep_supervision = enabled
 
-    def configure_optimizers(self):
-        optimizer = torch.optim.AdamW(self.network.parameters(),
-                                           self.initial_lr,
-                                           weight_decay=self.weight_decay,
-                                           eps=1e-4  # 1e-8 might cause nans in fp16
-                                           )
-        lr_scheduler = PolyLRScheduler(optimizer, self.initial_lr, self.num_epochs)
-        return optimizer, lr_scheduler
+    #def configure_optimizers(self):
+    #    optimizer = torch.optim.AdamW(self.network.parameters(),
+    #                                       self.initial_lr,
+    #                                       weight_decay=self.weight_decay,
+    #                                       eps=1e-4  # 1e-8 might cause nans in fp16
+    #                                       )
+    #    lr_scheduler = PolyLRScheduler(optimizer, self.initial_lr, self.num_epochs)
+    #    return optimizer, lr_scheduler
 
 
 class nnUNetTrainer_MedNeXt_S_kernel3(nnUNetTrainer_Optim_and_LR):
