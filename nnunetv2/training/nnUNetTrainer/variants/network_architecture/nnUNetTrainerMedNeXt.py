@@ -384,31 +384,22 @@ class MedNeXtEncoder(nn.Module):
     def forward(self, x):
         ret = []
         x = self.stem(x)
-        print(x.shape)
         x = self.enc_block_0(x)
-        print(x.shape)
         ret.append(x)
 
         x = self.down_0(x)
-        print(x.shape)
         x = self.enc_block_1(x)
-        print(x.shape)
         ret.append(x)
 
         x = self.down_1(x)
-        print(x.shape)
         x = self.enc_block_2(x)
-        print(x.shape)
         ret.append(x)
 
         x = self.down_2(x)
-        print(x.shape)
         x = self.enc_block_3(x)
-        print(x.shape)
         ret.append(x)
 
         x = self.down_3(x)
-        print(x.shape)
         ret.append(x)
         if self.return_skips:
             return ret
@@ -575,14 +566,12 @@ class MedNeXtDecoder(nn.Module):
     def forward(self, skips):
         x_res_0, x_res_1, x_res_2, x_res_3, x = skips
         x = self.bottleneck(x)
-        print(x.shape)
         if self.deep_supervision:
             x_ds_4 = self.out_4(x)
 
         x_up_3 = self.up_3(x)
         dec_x = x_res_3 + x_up_3
         x = self.dec_block_3(dec_x)
-        print(x.shape)
 
         if self.deep_supervision:
             x_ds_3 = self.out_3(x)
@@ -591,7 +580,6 @@ class MedNeXtDecoder(nn.Module):
         x_up_2 = self.up_2(x)
         dec_x = x_res_2 + x_up_2
         x = self.dec_block_2(dec_x)
-        print(x.shape)
         if self.deep_supervision:
             x_ds_2 = self.out_2(x)
         #del x_res_2, x_up_2
@@ -599,7 +587,6 @@ class MedNeXtDecoder(nn.Module):
         x_up_1 = self.up_1(x)
         dec_x = x_res_1 + x_up_1
         x = self.dec_block_1(dec_x)
-        print(x.shape)
         if self.deep_supervision:
             x_ds_1 = self.out_1(x)
         #del x_res_1, x_up_1
@@ -607,11 +594,9 @@ class MedNeXtDecoder(nn.Module):
         x_up_0 = self.up_0(x)
         dec_x = x_res_0 + x_up_0
         x = self.dec_block_0(dec_x)
-        print(x.shape)
         #del x_res_0, x_up_0, dec_x
 
         x = self.out_0(x)
-        print(x.shape)
 
         if self.deep_supervision:
             return [x, x_ds_1, x_ds_2, x_ds_3, x_ds_4]
