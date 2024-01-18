@@ -6,7 +6,6 @@ from torch import nn
 from nnunetv2.training.nnUNetTrainer.nnUNetTrainer import nnUNetTrainer
 from torch.nn import functional as F
 import torch.utils.checkpoint as checkpoint
-from torch._dynamo import OptimizedModule
 
 
 class MedNeXtBlock(nn.Module):
@@ -710,6 +709,7 @@ class nnUNetTrainer_MedNeXt_S_kernel3(nnUNetTrainer_Optim_and_LR):
             block_counts=[2, 2, 2, 2, 2, 2, 2, 2, 2],
             grn=False
         )
+        print(sum(p.numel() for p in network.parameters() if p.requires_grad))
         return network
 
 
