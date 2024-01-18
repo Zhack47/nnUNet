@@ -704,7 +704,7 @@ class nnUNetTrainer_MedNeXt_S_kernel3(nnUNetTrainer_Optim_and_LR):
             exp_r=2,  # Expansion ratio as in Swin Transformers
             kernel_size=3,  # Can test kernel_size
             deep_supervision=True,  # Can be used to test deep supervision
-            do_res=True,  # Can be used to individually test residual connection
+            do_res=False,  # Can be used to individually test residual connection
             do_res_up_down=True,
             block_counts=[2, 2, 2, 2, 2, 2, 2, 2, 2],
             grn=False
