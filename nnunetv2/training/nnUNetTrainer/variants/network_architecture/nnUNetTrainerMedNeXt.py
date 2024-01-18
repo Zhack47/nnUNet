@@ -101,7 +101,7 @@ class MedNeXtBlock(nn.Module):
             x1 = self.grn_gamma * (x1 * nx) + self.grn_beta + x1
         x1 = self.conv3(x1)
         if self.do_res:
-            x1 = x + x1
+            x1 = torch.add(x, x1)
         return x1
 
 
@@ -142,7 +142,7 @@ class MedNeXtDownBlock(MedNeXtBlock):
 
         if self.resample_do_res:
             res = self.res_conv(x)
-            x1 = x1 + res
+            x1 = torch.add(x1, res)
 
         return x1
 
@@ -195,7 +195,7 @@ class MedNeXtUpBlock(MedNeXtBlock):
                 res = torch.nn.functional.pad(res, (1, 0, 1, 0))
             elif self.dim == '3d':
                 res = torch.nn.functional.pad(res, (1, 0, 1, 0, 1, 0))
-            x1 = x1 + res
+            x1 = torch.add(x1,res)
 
         return x1
 
