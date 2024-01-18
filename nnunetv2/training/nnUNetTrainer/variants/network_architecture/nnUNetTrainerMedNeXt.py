@@ -566,7 +566,7 @@ class MedNeXtDecoder(nn.Module):
 
         x_up_3 = self.up_3(x)
 
-        dec_x = torch.add((x_res_3, x_up_3))
+        dec_x = torch.add(x_res_3, x_up_3)
         x = self.dec_block_3(dec_x)
 
         if self.deep_supervision:
@@ -574,21 +574,21 @@ class MedNeXtDecoder(nn.Module):
         #del x_res_3, x_up_3
 
         x_up_2 = self.up_2(x)
-        dec_x = torch.add((x_res_2, x_up_2))
+        dec_x = torch.add(x_res_2, x_up_2)
         x = self.dec_block_2(dec_x)
         if self.deep_supervision:
             x_ds_2 = self.out_2(x)
         #del x_res_2, x_up_2
 
         x_up_1 = self.up_1(x)
-        dec_x = torch.add((x_res_1, x_up_1))
+        dec_x = torch.add(x_res_1, x_up_1)
         x = self.dec_block_1(dec_x)
         if self.deep_supervision:
             x_ds_1 = self.out_1(x)
         #del x_res_1, x_up_1
 
         x_up_0 = self.up_0(x)
-        dec_x = torch.add((x_res_0, x_up_0))
+        dec_x = torch.add(x_res_0, x_up_0)
         x = self.dec_block_0(dec_x)
         #del x_res_0, x_up_0, dec_x
 
