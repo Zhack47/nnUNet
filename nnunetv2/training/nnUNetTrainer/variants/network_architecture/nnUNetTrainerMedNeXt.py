@@ -426,7 +426,7 @@ class MedNeXtDecoder(nn.Module):
         if type(exp_r) == int:
             exp_r = [exp_r for i in range(len(block_counts))]
 
-        self.do_ds = deep_supervision
+        self.deep_supervision = deep_supervision
         assert checkpoint_style in [None, 'outside_block']
         self.inside_block_checkpointing = False
         self.outside_block_checkpointing = False
@@ -566,28 +566,28 @@ class MedNeXtDecoder(nn.Module):
     def forward(self, skips):
         x_res_0, x_res_1, x_res_2, x_res_3, x = skips
         x = self.bottleneck(x)
-        if self.do_ds:
+        if self.deep_supervision:
             x_ds_4 = self.out_4(x)
 
         x_up_3 = self.up_3(x)
         dec_x = x_res_3 + x_up_3
         x = self.dec_block_3(dec_x)
 
-        if self.do_ds:
+        if self.deep_supervision:
             x_ds_3 = self.out_3(x)
         del x_res_3, x_up_3
 
         x_up_2 = self.up_2(x)
         dec_x = x_res_2 + x_up_2
         x = self.dec_block_2(dec_x)
-        if self.do_ds:
+        if self.deep_supervision:
             x_ds_2 = self.out_2(x)
         del x_res_2, x_up_2
 
         x_up_1 = self.up_1(x)
         dec_x = x_res_1 + x_up_1
         x = self.dec_block_1(dec_x)
-        if self.do_ds:
+        if self.deep_supervision:
             x_ds_1 = self.out_1(x)
         del x_res_1, x_up_1
 
@@ -598,7 +598,7 @@ class MedNeXtDecoder(nn.Module):
 
         x = self.out_0(x)
 
-        if self.do_ds:
+        if self.deep_supervision:
             return [x, x_ds_1, x_ds_2, x_ds_3, x_ds_4]
         else:
             return x
@@ -625,7 +625,7 @@ class MedNeXt(nn.Module):
 
         super().__init__()
 
-        self.do_ds = deep_supervision
+        self.deep_supervision = deep_supervision
         assert checkpoint_style in [None, 'outside_block']
         self.inside_block_checkpointing = False
         self.outside_block_checkpointing = False
