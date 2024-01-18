@@ -399,10 +399,8 @@ class MedNeXtEncoder(nn.Module):
 
         x = self.down_3(x)
         ret.append(x)
-        if self.return_skips:
-            return ret
-        else:
-            return ret[-1]
+
+        return ret
 
 class MedNeXtDecoder(nn.Module):
     def __init__(self, in_channels: int,
@@ -423,7 +421,6 @@ class MedNeXtDecoder(nn.Module):
 
         if type(exp_r) == int:
             exp_r = [exp_r for i in range(len(block_counts))]
-        self.return_skips = do_res
         self.deep_supervision = deep_supervision
         assert checkpoint_style in [None, 'outside_block']
         self.inside_block_checkpointing = False
@@ -562,16 +559,14 @@ class MedNeXtDecoder(nn.Module):
 
         self.block_counts = block_counts
     def forward(self, skips):
-        if self.return_skips:
-            x_res_0, x_res_1, x_res_2, x_res_3, x = skips
-        else:
-            x = skips
+        x_res_0, x_res_1, x_res_2, x_res_3, x = skips
         x = self.bottleneck(x)
         if self.deep_supervision:
             x_ds_4 = self.out_4(x)
 
         x_up_3 = self.up_3(x)
-        dec_x = x_res_3 + x_up_3
+
+        dec_x = torch.cat((x_res_3, x_up_3), 1)
         x = self.dec_block_3(dec_x)
 
         if self.deep_supervision:
@@ -579,21 +574,21 @@ class MedNeXtDecoder(nn.Module):
         #del x_res_3, x_up_3
 
         x_up_2 = self.up_2(x)
-        dec_x = x_res_2 + x_up_2
+        dec_x = torch.cat((x_res_2, x_up_2), 1)
         x = self.dec_block_2(dec_x)
         if self.deep_supervision:
             x_ds_2 = self.out_2(x)
         #del x_res_2, x_up_2
 
         x_up_1 = self.up_1(x)
-        dec_x = x_res_1 + x_up_1
+        dec_x = torch.cat((x_res_1, x_up_1), 1)
         x = self.dec_block_1(dec_x)
         if self.deep_supervision:
             x_ds_1 = self.out_1(x)
         #del x_res_1, x_up_1
 
         x_up_0 = self.up_0(x)
-        dec_x = x_res_0 + x_up_0
+        dec_x = torch.cat((x_res_0, x_up_0), 1)
         x = self.dec_block_0(dec_x)
         #del x_res_0, x_up_0, dec_x
 
