@@ -575,26 +575,26 @@ class MedNeXtDecoder(nn.Module):
 
         if self.deep_supervision:
             x_ds_3 = self.out_3(x)
-        del x_res_3, x_up_3
+        #del x_res_3, x_up_3
 
         x_up_2 = self.up_2(x)
         dec_x = x_res_2 + x_up_2
         x = self.dec_block_2(dec_x)
         if self.deep_supervision:
             x_ds_2 = self.out_2(x)
-        del x_res_2, x_up_2
+        #del x_res_2, x_up_2
 
         x_up_1 = self.up_1(x)
         dec_x = x_res_1 + x_up_1
         x = self.dec_block_1(dec_x)
         if self.deep_supervision:
             x_ds_1 = self.out_1(x)
-        del x_res_1, x_up_1
+        #del x_res_1, x_up_1
 
         x_up_0 = self.up_0(x)
         dec_x = x_res_0 + x_up_0
         x = self.dec_block_0(dec_x)
-        del x_res_0, x_up_0, dec_x
+        #del x_res_0, x_up_0, dec_x
 
         x = self.out_0(x)
 
@@ -636,6 +636,7 @@ class MedNeXt(nn.Module):
         if kernel_size is not None:
             enc_kernel_size = kernel_size
             dec_kernel_size = kernel_size
+
         self.encoder = MedNeXtEncoder(in_channels=in_channels, n_channels=n_channels, exp_r=exp_r,
                                       kernel_size=enc_kernel_size, do_res=do_res, do_res_up_down=do_res_up_down,
                                       checkpoint_style=checkpoint_style, block_counts=block_counts,
