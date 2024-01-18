@@ -705,7 +705,7 @@ class nnUNetTrainer_MedNeXt_S_kernel3(nnUNetTrainer_Optim_and_LR):
             do_res_up_down=True,
             block_counts=[2, 2, 2, 2, 2, 2, 2, 2, 2],
             grn=False
-        )
+        ).to(self.device)
         print(sum(p.numel() for p in network.parameters() if p.requires_grad))
         return network
 
