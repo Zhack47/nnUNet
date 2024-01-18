@@ -564,7 +564,7 @@ class MedNeXtDecoder(nn.Module):
 
         self.block_counts = block_counts
     def forward(self, x, skips):
-        x_res_3, x_res_2, x_res_1, x_res_0 = skips
+        x_res_0, x_res_1, x_res_2, x_res_3, x = skips
         x = self.bottleneck(x)
         if self.do_ds:
             x_ds_4 = self.out_4(x)
@@ -659,8 +659,8 @@ class MedNeXt(nn.Module):
 
     def forward(self, x):
 
-        x, skips = self.encoder(x)
-        out = self.decoder(x, skips)
+        skips = self.encoder(x)
+        out = self.decoder(skips)
         return out
 
 
