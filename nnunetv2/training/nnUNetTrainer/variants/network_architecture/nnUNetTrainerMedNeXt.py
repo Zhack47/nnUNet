@@ -655,9 +655,10 @@ class MedNeXt(nn.Module):
         return x
 
     def forward(self, x):
-
+        torch.cuda.empty_cache()
         skips = self.encoder(x)
         out = self.decoder(skips)
+        torch.cuda.empty_cache()
         return out
 
 
