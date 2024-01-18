@@ -267,6 +267,8 @@ class MedNeXtEncoder(nn.Module):
         if checkpoint_style == 'outside_block':
             self.outside_block_checkpointing = True
         assert dim in ['2d', '3d']
+        if do_res:
+            self.return_skips = True
 
         if kernel_size is not None:
             enc_kernel_size = kernel_size
