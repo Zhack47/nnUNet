@@ -563,7 +563,7 @@ class MedNeXtDecoder(nn.Module):
             self.out_4 = OutBlock(in_channels=n_channels * 16, n_classes=n_classes, dim=dim)
 
         self.block_counts = block_counts
-    def forward(self, x, skips):
+    def forward(self, skips):
         x_res_0, x_res_1, x_res_2, x_res_3, x = skips
         x = self.bottleneck(x)
         if self.do_ds:
