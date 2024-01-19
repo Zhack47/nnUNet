@@ -674,7 +674,7 @@ class nnUNetTrainer_Optim_and_LR(nnUNetTrainer):
         super().__init__(plans, configuration, fold, dataset_json, unpack_dataset, device)
         self.initial_lr = 1e-3
         num_of_outputs_in_mednext = 5
-        self.configuration_manager.pool_op_kernel_sizes = [[2, 2, 2] for i in range(num_of_outputs_in_mednext + 1)]
+        self.configuration_manager.pool_op_kernel_sizes = [[1,1,1]] +[[2, 2, 2] for i in range(num_of_outputs_in_mednext)]
 
     def configure_optimizers(self):
         optimizer = torch.optim.AdamW(self.network.parameters(),
