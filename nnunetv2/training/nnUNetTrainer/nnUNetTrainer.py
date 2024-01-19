@@ -894,7 +894,7 @@ class nnUNetTrainer(object):
             target = [i.to(self.device, non_blocking=True) for i in target]
         else:
             target = target.to(self.device, non_blocking=True)
-        print(t.shape for t in target)
+        print(type(target))
 
         self.optimizer.zero_grad(set_to_none=True)
         # Autocast is a little bitch.
