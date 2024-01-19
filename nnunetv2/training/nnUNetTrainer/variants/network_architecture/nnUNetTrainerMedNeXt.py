@@ -619,7 +619,7 @@ class MedNeXtDecoder(nn.Module):
             del x_res_2, x_up_2
 
             x_up_1 = checkpoint.checkpoint(self.up_1, x, self.dummy_tensor)
-            dec_x = torch.add(x_res_2, x_up_2)
+            dec_x = torch.add(x_res_1, x_up_1)
             x = self.iterative_checkpoint(self.dec_block_1, dec_x)
             if self.deep_supervision:
                 x_ds_1 = checkpoint.checkpoint(self.out_1, x, self.dummy_tensor)
