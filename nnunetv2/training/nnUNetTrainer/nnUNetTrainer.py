@@ -894,8 +894,6 @@ class nnUNetTrainer(object):
             target = [i.to(self.device, non_blocking=True) for i in target]
         else:
             target = target.to(self.device, non_blocking=True)
-        print(type(target))
-        print(len(target))
         for i in target:
             print(i.shape)
 
@@ -907,6 +905,9 @@ class nnUNetTrainer(object):
         with autocast(self.device.type, enabled=True) if self.device.type == 'cuda' else dummy_context():
             output = self.network(data)
             # del data
+
+            for i in output:
+                print(i.shape)
             l = self.loss(output, target)
 
         if self.grad_scaler is not None:
