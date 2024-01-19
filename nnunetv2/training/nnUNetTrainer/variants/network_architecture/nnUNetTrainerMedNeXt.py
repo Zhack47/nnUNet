@@ -601,27 +601,27 @@ class MedNeXtDecoder(nn.Module):
         x_res_0, x_res_1, x_res_2, x_res_3, x = skips
         if self.outside_block_checkpointing:
             x = self.iterative_checkpoint(self.bottleneck, x)
-            if self.do_ds:
+            if self.deep_supervision:
                 x_ds_4 = checkpoint.checkpoint(self.out_4, x, self.dummy_tensor)
 
             x_up_3 = checkpoint.checkpoint(self.up_3, x, self.dummy_tensor)
             dec_x = x_res_3 + x_up_3
             x = self.iterative_checkpoint(self.dec_block_3, dec_x)
-            if self.do_ds:
+            if self.deep_supervision:
                 x_ds_3 = checkpoint.checkpoint(self.out_3, x, self.dummy_tensor)
             del x_res_3, x_up_3
 
             x_up_2 = checkpoint.checkpoint(self.up_2, x, self.dummy_tensor)
             dec_x = x_res_2 + x_up_2
             x = self.iterative_checkpoint(self.dec_block_2, dec_x)
-            if self.do_ds:
+            if self.deep_supervision:
                 x_ds_2 = checkpoint.checkpoint(self.out_2, x, self.dummy_tensor)
             del x_res_2, x_up_2
 
             x_up_1 = checkpoint.checkpoint(self.up_1, x, self.dummy_tensor)
             dec_x = x_res_1 + x_up_1
             x = self.iterative_checkpoint(self.dec_block_1, dec_x)
-            if self.do_ds:
+            if self.deep_supervision:
                 x_ds_1 = checkpoint.checkpoint(self.out_1, x, self.dummy_tensor)
             del x_res_1, x_up_1
 
