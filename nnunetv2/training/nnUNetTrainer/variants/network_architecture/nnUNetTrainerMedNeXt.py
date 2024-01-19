@@ -768,7 +768,7 @@ class nnUNetTrainer_MedNeXt_S_kernel3(nnUNetTrainer_Optim_and_LR):
                                    enable_deep_supervision: bool = True) -> nn.Module:
         network = MedNeXt(
             in_channels=self.num_input_channels,
-            n_channels=1,
+            n_channels=32,
             n_classes=self.label_manager.num_segmentation_heads,
             exp_r=2,  # Expansion ratio as in Swin Transformers
             kernel_size=3,  # Can test kernel_size
