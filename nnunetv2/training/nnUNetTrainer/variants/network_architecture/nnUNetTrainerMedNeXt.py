@@ -382,24 +382,38 @@ class MedNeXtEncoder(nn.Module):
     def forward(self, x):
         ret = []
         x = self.stem(x)
-        x = self.enc_block_0(x)
-        ret.append(x)
+        if self.outside_block_checkpointing:
+            x = self.iterative_checkpoint(self.enc_block_0, x)
+            ret.append(x)
+            x = checkpoint.checkpoint(self.down_0, x, self.dummy_tensor)
+            x = self.iterative_checkpoint(self.enc_block_1, x)
+            ret.append(x)
+            x = checkpoint.checkpoint(self.down_1, x, self.dummy_tensor)
+            x = self.iterative_checkpoint(self.enc_block_2, x)
+            ret.append(x)
+            x = checkpoint.checkpoint(self.down_2, x, self.dummy_tensor)
+            x = self.iterative_checkpoint(self.enc_block_3, x)
+            ret.append(x)
+            x = checkpoint.checkpoint(self.down_3, x, self.dummy_tensor)
+            ret.append(x)
+        else:
+            x = self.enc_block_0(x)
+            ret.append(x)
 
-        x = self.down_0(x)
-        x = self.enc_block_1(x)
-        ret.append(x)
+            x = self.down_0(x)
+            x = self.enc_block_1(x)
+            ret.append(x)
 
-        x = self.down_1(x)
-        x = self.enc_block_2(x)
-        ret.append(x)
+            x = self.down_1(x)
+            x = self.enc_block_2(x)
+            ret.append(x)
 
-        x = self.down_2(x)
-        x = self.enc_block_3(x)
-        ret.append(x)
+            x = self.down_2(x)
+            x = self.enc_block_3(x)
+            ret.append(x)
 
-        x = self.down_3(x)
-        ret.append(x)
-
+            x = self.down_3(x)
+            ret.append(x)
         return ret
 
 class MedNeXtDecoder(nn.Module):
@@ -560,39 +574,72 @@ class MedNeXtDecoder(nn.Module):
         self.block_counts = block_counts
     def forward(self, skips):
         x_res_0, x_res_1, x_res_2, x_res_3, x = skips
-        x = self.bottleneck(x)
-        if self.deep_supervision:
-            x_ds_4 = self.out_4(x)
+        if self.outside_block_checkpointing:
+            x = self.iterative_checkpoint(self.bottleneck, x)
+            if self.do_ds:
+                x_ds_4 = checkpoint.checkpoint(self.out_4, x, self.dummy_tensor)
 
-        x_up_3 = self.up_3(x)
+            x_up_3 = checkpoint.checkpoint(self.up_3, x, self.dummy_tensor)
+            dec_x = x_res_3 + x_up_3
+            x = self.iterative_checkpoint(self.dec_block_3, dec_x)
+            if self.do_ds:
+                x_ds_3 = checkpoint.checkpoint(self.out_3, x, self.dummy_tensor)
+            del x_res_3, x_up_3
 
-        dec_x = torch.add(x_res_3, x_up_3)
-        x = self.dec_block_3(dec_x)
+            x_up_2 = checkpoint.checkpoint(self.up_2, x, self.dummy_tensor)
+            dec_x = x_res_2 + x_up_2
+            x = self.iterative_checkpoint(self.dec_block_2, dec_x)
+            if self.do_ds:
+                x_ds_2 = checkpoint.checkpoint(self.out_2, x, self.dummy_tensor)
+            del x_res_2, x_up_2
 
-        if self.deep_supervision:
-            x_ds_3 = self.out_3(x)
-        #del x_res_3, x_up_3
+            x_up_1 = checkpoint.checkpoint(self.up_1, x, self.dummy_tensor)
+            dec_x = x_res_1 + x_up_1
+            x = self.iterative_checkpoint(self.dec_block_1, dec_x)
+            if self.do_ds:
+                x_ds_1 = checkpoint.checkpoint(self.out_1, x, self.dummy_tensor)
+            del x_res_1, x_up_1
 
-        x_up_2 = self.up_2(x)
-        dec_x = torch.add(x_res_2, x_up_2)
-        x = self.dec_block_2(dec_x)
-        if self.deep_supervision:
-            x_ds_2 = self.out_2(x)
-        #del x_res_2, x_up_2
+            x_up_0 = checkpoint.checkpoint(self.up_0, x, self.dummy_tensor)
+            dec_x = x_res_0 + x_up_0
+            x = self.iterative_checkpoint(self.dec_block_0, dec_x)
+            del x_res_0, x_up_0, dec_x
 
-        x_up_1 = self.up_1(x)
-        dec_x = torch.add(x_res_1, x_up_1)
-        x = self.dec_block_1(dec_x)
-        if self.deep_supervision:
-            x_ds_1 = self.out_1(x)
-        #del x_res_1, x_up_1
+            x = checkpoint.checkpoint(self.out_0, x, self.dummy_tensor)
+        else:
+            x = self.bottleneck(x)
+            if self.deep_supervision:
+                x_ds_4 = self.out_4(x)
 
-        x_up_0 = self.up_0(x)
-        dec_x = torch.add(x_res_0, x_up_0)
-        x = self.dec_block_0(dec_x)
-        #del x_res_0, x_up_0, dec_x
+            x_up_3 = self.up_3(x)
 
-        x = self.out_0(x)
+            dec_x = torch.add(x_res_3, x_up_3)
+            x = self.dec_block_3(dec_x)
+
+            if self.deep_supervision:
+                x_ds_3 = self.out_3(x)
+            del x_res_3, x_up_3
+
+            x_up_2 = self.up_2(x)
+            dec_x = torch.add(x_res_2, x_up_2)
+            x = self.dec_block_2(dec_x)
+            if self.deep_supervision:
+                x_ds_2 = self.out_2(x)
+            del x_res_2, x_up_2
+
+            x_up_1 = self.up_1(x)
+            dec_x = torch.add(x_res_1, x_up_1)
+            x = self.dec_block_1(dec_x)
+            if self.deep_supervision:
+                x_ds_1 = self.out_1(x)
+            del x_res_1, x_up_1
+
+            x_up_0 = self.up_0(x)
+            dec_x = torch.add(x_res_0, x_up_0)
+            x = self.dec_block_0(dec_x)
+            del x_res_0, x_up_0, dec_x
+
+            x = self.out_0(x)
 
         if self.deep_supervision:
             return [x, x_ds_1, x_ds_2, x_ds_3, x_ds_4]
@@ -703,7 +750,8 @@ class nnUNetTrainer_MedNeXt_S_kernel3(nnUNetTrainer_Optim_and_LR):
             do_res=False,  # Can be used to individually test residual connection
             do_res_up_down=True,
             block_counts=[2, 2, 2, 2, 2, 2, 2, 2, 2],
-            grn=False
+            grn=False,
+            checkpoint_style = "outside_block"
         ).to(self.device)
         print(sum(p.numel() for p in network.parameters() if p.requires_grad))
         return network
