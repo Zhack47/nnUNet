@@ -895,6 +895,7 @@ class nnUNetTrainer(object):
         else:
             target = target.to(self.device, non_blocking=True)
         print(type(target))
+        print(len(target))
 
         self.optimizer.zero_grad(set_to_none=True)
         # Autocast is a little bitch.
