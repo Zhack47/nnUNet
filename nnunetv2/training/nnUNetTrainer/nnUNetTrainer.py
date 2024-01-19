@@ -889,12 +889,12 @@ class nnUNetTrainer(object):
     def train_step(self, batch: dict) -> dict:
         data = batch['data']
         target = batch['target']
-        print(t.shape for t in target)
         data = data.to(self.device, non_blocking=True)
         if isinstance(target, list):
             target = [i.to(self.device, non_blocking=True) for i in target]
         else:
             target = target.to(self.device, non_blocking=True)
+        print(t.shape for t in target)
 
         self.optimizer.zero_grad(set_to_none=True)
         # Autocast is a little bitch.
