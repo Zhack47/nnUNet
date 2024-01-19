@@ -260,6 +260,7 @@ class MedNeXtEncoder(nn.Module):
                  ):
         super().__init__()
 
+        self.dummy_tensor = nn.Parameter(torch.tensor([1.]), requires_grad=True)
         assert checkpoint_style in [None, 'outside_block']
         self.inside_block_checkpointing = False
         self.outside_block_checkpointing = False
@@ -444,6 +445,7 @@ class MedNeXtDecoder(nn.Module):
                  grn=False):
         super().__init__()
 
+        self.dummy_tensor = nn.Parameter(torch.tensor([1.]), requires_grad=True)
         if type(exp_r) == int:
             exp_r = [exp_r for i in range(len(block_counts))]
         self.deep_supervision = deep_supervision
@@ -691,6 +693,7 @@ class MedNeXt(nn.Module):
 
         super().__init__()
 
+        self.dummy_tensor = nn.Parameter(torch.tensor([1.]), requires_grad=True)
         self.deep_supervision = deep_supervision
         assert checkpoint_style in [None, 'outside_block']
         self.inside_block_checkpointing = False
