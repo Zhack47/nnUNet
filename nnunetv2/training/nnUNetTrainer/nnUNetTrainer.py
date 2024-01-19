@@ -296,7 +296,6 @@ class nnUNetTrainer(object):
         if self.enable_deep_supervision:
             deep_supervision_scales = list(list(i) for i in 1 / np.cumprod(np.vstack(
                 self.configuration_manager.pool_op_kernel_sizes), axis=0))[:-1]
-            print(self.configuration_manager.pool_op_kernel_sizes)
         else:
             deep_supervision_scales = None  # for train and val_transforms
         return deep_supervision_scales
@@ -599,7 +598,6 @@ class nnUNetTrainer(object):
         # outputs?
 
         deep_supervision_scales = self._get_deep_supervision_scales()
-        print(deep_supervision_scales)
 
         (
             rotation_for_DA,
@@ -894,8 +892,6 @@ class nnUNetTrainer(object):
             target = [i.to(self.device, non_blocking=True) for i in target]
         else:
             target = target.to(self.device, non_blocking=True)
-        for i in target:
-            print(i.shape)
 
         self.optimizer.zero_grad(set_to_none=True)
         # Autocast is a little bitch.
@@ -906,8 +902,6 @@ class nnUNetTrainer(object):
             output = self.network(data)
             # del data
 
-            for i in output:
-                print(i.shape)
             l = self.loss(output, target)
 
         if self.grad_scaler is not None:
