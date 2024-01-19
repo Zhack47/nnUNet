@@ -379,6 +379,17 @@ class MedNeXtEncoder(nn.Module):
             grn=grn
         )
 
+    def iterative_checkpoint(self, sequential_block, x):
+        """
+        This simply forwards x through each block of the sequential_block while
+        using gradient_checkpointing. This implementation is designed to bypass
+        the following issue in PyTorch's gradient checkpointing:
+        https://discuss.pytorch.org/t/checkpoint-with-no-grad-requiring-inputs-problem/19117/9
+        """
+        for l in sequential_block:
+            x = checkpoint.checkpoint(l, x, self.dummy_tensor)
+        return x
+
     def forward(self, x):
         ret = []
         x = self.stem(x)
@@ -572,6 +583,18 @@ class MedNeXtDecoder(nn.Module):
             self.out_4 = OutBlock(in_channels=n_channels * 16, n_classes=n_classes, dim=dim)
 
         self.block_counts = block_counts
+
+
+    def iterative_checkpoint(self, sequential_block, x):
+        """
+        This simply forwards x through each block of the sequential_block while
+        using gradient_checkpointing. This implementation is designed to bypass
+        the following issue in PyTorch's gradient checkpointing:
+        https://discuss.pytorch.org/t/checkpoint-with-no-grad-requiring-inputs-problem/19117/9
+        """
+        for l in sequential_block:
+            x = checkpoint.checkpoint(l, x, self.dummy_tensor)
+        return x
     def forward(self, skips):
         x_res_0, x_res_1, x_res_2, x_res_3, x = skips
         if self.outside_block_checkpointing:
