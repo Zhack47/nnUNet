@@ -19,7 +19,8 @@ class nnUNetTrainer_autopetiii(nnUNetTrainer):
         input()
         print(data)
         target = batch['target']
-
+        print(black_magic)
+        print(batch["keys"])
         data = data.to(self.device, non_blocking=True)
         if isinstance(target, list):
             target = [i.to(self.device, non_blocking=True) for i in target]
