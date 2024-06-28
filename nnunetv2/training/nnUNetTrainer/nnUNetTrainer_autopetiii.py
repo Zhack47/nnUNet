@@ -10,7 +10,7 @@ class nnUNetTrainer_autopetiii(nnUNetTrainer):
     def train_step(self, batch: dict) -> dict:
         data = batch['data']
         print(batch['keys'])
-        print([-1  if 'psma' in i else 0 for i in batch['keys']])
+        print([-1  if 'psma' in i else 1 for i in batch['keys']])
         target = batch['target']
 
         data = data.to(self.device, non_blocking=True)
