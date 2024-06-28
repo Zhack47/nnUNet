@@ -9,18 +9,10 @@ from nnunetv2.training.nnUNetTrainer.nnUNetTrainer import nnUNetTrainer
 class nnUNetTrainer_autopetiii(nnUNetTrainer):
     def train_step(self, batch: dict) -> dict:
         data = batch['data']
-        print(batch['keys'])
         black_magic = [-1  if 'psma' in i else 1 for i in batch['keys']]
-        print(data)
-        print(data.shape)
         for i in range(self.batch_size):
             data[i,...] = data[i, ...] * black_magic[i]
-        print(data.shape)
-        input()
-        print(data)
         target = batch['target']
-        print(black_magic)
-        print(batch["keys"])
         data = data.to(self.device, non_blocking=True)
         if isinstance(target, list):
             target = [i.to(self.device, non_blocking=True) for i in target]
