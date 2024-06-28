@@ -13,7 +13,8 @@ class nnUNetTrainer_autopetiii(nnUNetTrainer):
         black_magic = [-1  if 'psma' in i else 1 for i in batch['keys']]
         print(data)
         print(data.shape)
-        data = data * black_magic
+        for i in range(self.batch_size):
+            data[i,...] = data[i, ...] * black_magic[i]
         print(data.shape)
         input()
         print(data)
