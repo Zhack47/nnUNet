@@ -124,11 +124,10 @@ class nnUNetTrainer_autopetiii(nnUNetTrainer):
 
         data = data.to(self.device, non_blocking=True)
         if isinstance(target, list):
-            target = [i.to(self.device, non_blocking=True) for i in target]
-            print([i.shape for i in target])
+            target = [(i==1).to(device=self.device, dtype=torch.uint8, non_blocking=True) for i in target]
             mask = [i>0 for i in target]
         else:
-            target = target.to(self.device, non_blocking=True)
+            target = (target==1).to(device=self.desvice, dtype=torch.uint8, non_blocking=True)
             mask = target>0
 
         self.optimizer.zero_grad(set_to_none=True)
