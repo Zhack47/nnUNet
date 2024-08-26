@@ -147,7 +147,7 @@ class nnUNetTrainer_autopetiii(nnUNetTrainer):
             # del data
             l = self.loss(output, target, mask)
 
-        if False: #self.grad_scaler is not None:
+        if self.grad_scaler is not None:
             self.grad_scaler.scale(l).backward()
             self.grad_scaler.unscale_(self.optimizer)
             if self.is_ddp:
