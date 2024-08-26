@@ -168,11 +168,8 @@ class nnUNetTrainer_autopetiii(nnUNetTrainer):
                 mod = self.network
             if isinstance(mod, OptimizedModule):
                 mod = mod._orig_mod
-            print(f"Before: {l}", end=", ")
             self.grads = gradfilter_ema(mod, grads=self.grads, alpha=.98, lamb=2.)
-            print(f"After: {l}", end=", ")
             torch.nn.utils.clip_grad_norm_(self.network.parameters(), 12)
-            print(f"After all: {l}", end=", ")
             self.optimizer.step()
         return {'loss': l.detach().cpu().numpy()}
 
