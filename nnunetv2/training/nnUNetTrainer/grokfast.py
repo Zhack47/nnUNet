@@ -45,6 +45,7 @@ def gradfilter_ema(
     for n, p in m.named_parameters():
         if p.requires_grad and p.grad is not None:
             grads[n] = grads[n] * alpha + p.grad.data.detach() * (1 - alpha)
-            p.grad.data = p.grad.data + grads[n] * lamb
+            p.grad.data = (p.grad.data + grads[n] * lamb) / (1+lamb)  
+            # Weighted average instead of scaled mixture. See https://github.com/ironjr/grokfast/issues/9
 
     return grads
