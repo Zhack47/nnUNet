@@ -10,6 +10,7 @@ from nnunetv2.training.nnUNetTrainer.nnUNetTrainer import nnUNetTrainer
 from nnunetv2.training.loss.compound_losses import DC_and_CE_loss, DC_and_BCE_loss
 from nnunetv2.training.loss.deep_supervision import DeepSupervisionWrapper
 from nnunetv2.training.loss.dice import get_tp_fp_fn_tn, MemoryEfficientSoftDiceLoss
+from grokfast import gradfilter_ma, gradfilter_ema
 
 
 # Didnt work
@@ -118,6 +119,11 @@ class nnUNetTrainer_autopetiii(nnUNetTrainer):
 
         return loss
 
+    def on_train_start(self):
+        res = super().on_train_start()
+        self.grads = None
+        return res
+
     def train_step(self, batch: dict) -> dict:
         data = batch['data']
         target = batch['target']
@@ -143,11 +149,13 @@ class nnUNetTrainer_autopetiii(nnUNetTrainer):
         if self.grad_scaler is not None:
             self.grad_scaler.scale(l).backward()
             self.grad_scaler.unscale_(self.optimizer)
+            self.grads = gradfilter_ema(self.network, grads=self.grads, alpha=.98, lamb=2.)
             torch.nn.utils.clip_grad_norm_(self.network.parameters(), 12)
             self.grad_scaler.step(self.optimizer)
             self.grad_scaler.update()
         else:
             l.backward()
+            self.grads = gradfilter_ema(self.network, grads=self.grads, alpha=.98, lamb=2.)
             torch.nn.utils.clip_grad_norm_(self.network.parameters(), 12)
             self.optimizer.step()
         return {'loss': l.detach().cpu().numpy()}
